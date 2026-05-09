@@ -1,0 +1,59 @@
+[package]
+name = "project-x-server"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "project-x-server"
+path = "src/main.rs"
+
+[dependencies]
+# Web
+axum = { version = "0.8", features = ["ws", "macros"] }
+axum-extra = { version = "0.9", features = ["typed-header"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+tokio = { version = "1", features = ["full"] }
+
+# Database
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate"] }
+
+# Hedera (Hiero) Ecosystem
+# In 2026, the hedera crate is the primary interface for HCS, HTS, and Identity
+hedera = "0.43" 
+
+# Full DID & Verifiable Credentials
+# 'ssi' is the industrial standard for W3C-compliant identity in Rust
+ssi = { version = "0.16", features = ["ed25519"] }
+did-method-key = "0.2" # For offline BLE did:key resolution
+
+# Crypto
+# Version 2.x is now fully compatible with this stack
+ed25519-dalek = { version = "2.1", features = ["rand_core", "serde"] }
+sha2 = "0.10"
+bs58 = "0.5"
+rand = "0.8"
+
+# Serde
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Utils
+uuid = { version = "1", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "1"
+anyhow = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+dotenvy = "0.15"
+
+# Local DID SDK integration
+hiero-did-core = { path = "../heka-rs-did-sdk/core" }
+hiero-did-method = { path = "../heka-rs-did-sdk/method" }
+hiero-did-registrar = { path = "../heka-rs-did-sdk/registrar" }
+hiero-did-resolver = { path = "../heka-rs-did-sdk/resolver" }
+hiero-sdk = { version = "0.45.0", features = ["serde"] }
+
+[profile.release]
+opt-level = 3
+lto = true
